@@ -22,7 +22,7 @@ const connect = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("Connected to MongoDB.");
+    console.log("Connected to MongoDB atlas.");
   } catch (error) {
     console.error("MongoDB connection error:", error);
   }
