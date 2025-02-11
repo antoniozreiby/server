@@ -18,10 +18,13 @@ const PORT = process.env.PORT || 2000;
 
 const connect = async () => {
   try {
-    await mongoose.connect(process.env.MONGO);
-    console.log("Connected to mongoDB.");
+    await mongoose.connect(process.env.MONGO, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB.");
   } catch (error) {
-    throw error;
+    console.error("MongoDB connection error:", error);
   }
 };
 
