@@ -22,26 +22,15 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-export const getUser = async (req, res, next) => {
+// Example GET route to fetch user details
+app.get("/users/:id", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).populate("posts");
-    // Map the _id to id
-    const userResponse = {
-      id: user._id, // Map _id to id
-      username: user.username,
-      email: user.email,
-      profilePicture: user.profilePicture,
-      routines: user.routines,
-      entries: user.entries,
-      meals: user.meals,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    };
-    res.status(200).json(user);
-  } catch (err) {
-    next(err);
+    const user = await User.findById(req.params.id); // Fetch user by ID
+    res.json(user); // Mongoose will return the virtual `id` along with the rest of the user data
+  } catch (error) {
+    res.status(500).send(error);
   }
-};
+});
 
 export const getUsers = async (req, res, next) => {
   try {
