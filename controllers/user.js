@@ -27,7 +27,7 @@ export const deleteUser = async (req, res, next) => {
 // Get single user
 export const getUser = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id).populate("posts");
+    const user = await User.findById(req.params.id);
     // Map the _id to id
     const userResponse = {
       id: user._id.toString(), // Map _id to id as a string
