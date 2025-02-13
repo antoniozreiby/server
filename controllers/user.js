@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 
+// Update user
 export const updateUser = async (req, res, next) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(
@@ -13,6 +14,7 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
+// Delete user
 export const deleteUser = async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.params.id);
@@ -22,20 +24,45 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-// Example GET route to fetch user details
-app.get("/users/:id", async (req, res) => {
+// Get single user
+export const getUser = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id); // Fetch user by ID
-    res.json(user); // Mongoose will return the virtual `id` along with the rest of the user data
-  } catch (error) {
-    res.status(500).send(error);
+    const user = await User.findById(req.params.id).populate("posts");
+    // Map the _id to id
+    const userResponse = {
+      id: user._id.toString(), // Map _id to id as a string
+      username: user.username,
+      email: user.email,
+      profilePicture: user.profilePicture,
+      routines: user.routines,
+      entries: user.entries,
+      meals: user.meals,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+    res.status(200).json(userResponse); // Send mapped userResponse, not user
+  } catch (err) {
+    next(err);
   }
-});
+};
 
+// Get all users
 export const getUsers = async (req, res, next) => {
   try {
     const users = await User.find();
-    res.status(200).json(users);
+    // Map each user to include id as a virtual or mapped field
+    const usersResponse = users.map((user) => ({
+      id: user._id.toString(), // Map _id to id for all users
+      username: user.username,
+      email: user.email,
+      profilePicture: user.profilePicture,
+      routines: user.routines,
+      entries: user.entries,
+      meals: user.meals,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    }));
+    res.status(200).json(usersResponse);
   } catch (err) {
     next(err);
   }
